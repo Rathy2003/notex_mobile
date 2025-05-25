@@ -39,6 +39,7 @@ class AuthController extends GetxController{
            var token = result['token'];
            box.write("_token", token);
            isLogin.value = true;
+           user_info.value = result['data'];
            Get.offAllNamed(AppRoutes.home);
          }
       });

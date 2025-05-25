@@ -33,7 +33,11 @@ class _TextEditorPageState extends State<TextEditorPage> {
   }
 
   Widget build(BuildContext context) {
+
+    double halfHeight = MediaQuery.of(context).size.height * 0.5;
+
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -59,7 +63,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
-        child: Column(
+        child: ListView(
           children: [
            quill.QuillSimpleToolbar(
              controller: _controller,
@@ -70,31 +74,30 @@ class _TextEditorPageState extends State<TextEditorPage> {
              ),
 
            ),
-            Flexible(
-              child: quill.QuillEditor.basic(
-                controller: _controller,
-                config: const quill.QuillEditorConfig(
+            quill.QuillEditor.basic(
+              controller: _controller,
+              config: const quill.QuillEditorConfig(
                   customStyles: quill.DefaultStyles(
                   )
-                ),
+              ),
+            ),
+            SizedBox(height: 45,),
+            Container(
+              padding: EdgeInsets.only(left: 25,right: 25,top: 10,bottom:50),
+              child: CustomButton(
+                  onPressed: (){
+                    final delOpt = _controller.document.toDelta().toJson();
+                    final converter = QuillDeltaToHtmlConverter(
+                      delOpt,
+                      ConverterOptions.forEmail(),
+                    );
+                    final html = converter.convert();
+                    _noteController.saveChangeContent(html);
+                  },
+                  label: "Save"
               ),
             ),
           ],
-        ),
-      ),
-      bottomNavigationBar:  Container(
-        padding: EdgeInsets.only(left: 25,right: 25,top: 10,bottom:50),
-        child: CustomButton(
-            onPressed: (){
-              final delOpt = _controller.document.toDelta().toJson();
-              final converter = QuillDeltaToHtmlConverter(
-                delOpt,
-                ConverterOptions.forEmail(),
-              );
-              final html = converter.convert();
-              _noteController.saveChangeContent(html);
-            },
-            label: "Save"
         ),
       ),
     );

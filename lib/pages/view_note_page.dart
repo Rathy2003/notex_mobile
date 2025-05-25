@@ -55,14 +55,15 @@ class ViewNotePage extends StatelessWidget {
         ],
         backgroundColor: AppColors.secondaryColor,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: InteractiveViewer(
-            minScale: 1.0,
-            maxScale: 4.0,
-            boundaryMargin: EdgeInsets.all(20),
-            child: Obx(()=> SelectionArea(
+      body: Container(
+        height: double.infinity,
+        padding: const EdgeInsets.all(15.0),
+        child: InteractiveViewer(
+          minScale: 1.0,
+          maxScale: 4.0,
+          boundaryMargin: EdgeInsets.all(20),
+          child: Obx(()=> SingleChildScrollView(
+            child: SelectionArea(
               child: HtmlWidget(
                 '''
                 <body class="container">
@@ -77,7 +78,7 @@ class ViewNotePage extends StatelessWidget {
                       'word-wrap': 'break-word'
                     };
                   }
-
+            
                   if (element.classes.contains('container')) {
                     return {
                       'background-color': 'black'
@@ -89,8 +90,8 @@ class ViewNotePage extends StatelessWidget {
                     color: AppColors.textColor
                 ),
               ),
-            )),
-          ),
+            ),
+          )),
         ),
       ),
     );

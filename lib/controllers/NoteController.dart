@@ -52,6 +52,7 @@ class NoteController extends GetxController{
       var result = json.decode(response.body);
       if(result['status'] == 200){
         selected_note['content'] = content;
+        getNotes();
         Get.back();
       }
     });

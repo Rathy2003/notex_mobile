@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,19 +14,36 @@ class CustomAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        TextButton(
-            onPressed: ()=> Get.back(),
-            child: Text( cancelLabel ?? "Cancel")
-        ),
-        TextButton(
-            onPressed: onConfirm,
-            child: Text(confirmLabel ?? "OK")
-        )
-      ],
+
+     return Platform.isAndroid ?
+     AlertDialog(
+         title: Text(title),
+         content: Text(content),
+         actions: [
+           TextButton(
+               onPressed: ()=> Get.back(),
+               child: Text( cancelLabel ?? "Cancel")
+           ),
+           TextButton(
+               onPressed: onConfirm,
+               child: Text(confirmLabel ?? "OK")
+           )
+         ],
+     ) :
+
+    CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+              onPressed: ()=> Get.back(),
+              child: Text( cancelLabel ?? "Cancel")
+          ),
+          TextButton(
+              onPressed: onConfirm,
+              child: Text(confirmLabel ?? "OK")
+          )
+        ],
     );
   }
 }
