@@ -18,7 +18,7 @@ class SearchNotePage extends StatelessWidget {
         padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-            SizedBox(height: 15,),
+            SizedBox(height: 30,),
             // back button and search bar
             Flexible(
               flex: 4,
@@ -46,6 +46,11 @@ class SearchNotePage extends StatelessWidget {
                           onChanged: (value) {
                             noteController.onSearchNotes(value);
                           },
+                          elevation: MaterialStateProperty.resolveWith<double?>(
+                            (states) {
+                              return 0;
+                            },
+                          ),
                           controller: searchController,
                           constraints: BoxConstraints(
                               minHeight: 45

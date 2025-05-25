@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_storage/get_storage.dart';
 import 'package:notex_mobile/controllers/NoteController.dart';
+import '../utils/environment.dart';
 
 class TagsController extends GetxController{
   var tagsList = [].obs;
@@ -40,7 +41,7 @@ class TagsController extends GetxController{
   }
 
   getTags() async{
-    var rp = await http.get(Uri.parse("https://notex-backend-sandy.vercel.app/api/tags?userid=N9Wgm26kMk5yKTNfWyA0"));
+    var rp = await http.get(Uri.parse("${Environment.API_BASE_URL}/tags?userid=N9Wgm26kMk5yKTNfWyA0"));
     var result = await rp.body;
     tagsList.value = json.decode(result)['data'];
   }

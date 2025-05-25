@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:notex_mobile/utils/environment.dart';
 
 class NoteController extends GetxController{
 
@@ -30,11 +31,30 @@ class NoteController extends GetxController{
 
   getNotes() async{
       isLoading.value = true;
-      var rp = await http.get(Uri.parse("https://notex-backend-sandy.vercel.app/api/notes?userid=N9Wgm26kMk5yKTNfWyA0"));
+      var rp = await http.get(Uri.parse("${Environment.API_BASE_URL}/notes?userid=N9Wgm26kMk5yKTNfWyA0"));
       var result = await rp.body;
       temp_notes_list = json.decode(result);
       notes_list.value = getFilterNotesByTags();
       isLoading.value = false;
+  }
+
+  saveChangeContent(String content){
+    var body = json.encode({
+      "noteid": selected_note['id'],
+      "content": content,
+    });
+    http.put(Uri.parse("${Environment.API_BASE_URL}/note/edit"),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:body
+    ).then((response){
+      var result = json.decode(response.body);
+      if(result['status'] == 200){
+        selected_note['content'] = content;
+        Get.back();
+      }
+    });
   }
 
   onUpdateFilterNotes(){

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 AppBar AppBarWidget(){
   return AppBar(
+    automaticallyImplyLeading: false,
     backgroundColor: AppColors.secondaryColor,
     centerTitle: true,
     title: Text(
