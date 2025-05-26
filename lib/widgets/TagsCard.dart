@@ -13,7 +13,7 @@ class TagsCard extends StatelessWidget {
     TagsController tagsController = Get.find();
 
     return Obx(() {
-      final String tagName = tagsController.tagsList[index]['name'];
+      final String tagName = tagsController.tagsList[index].name;
       final bool isSelected = tagsController.selectedTagsList.contains(tagName);
 
       return Material(

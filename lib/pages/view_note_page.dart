@@ -61,7 +61,7 @@ class ViewNotePage extends StatelessWidget {
         child: InteractiveViewer(
           minScale: 1.0,
           maxScale: 4.0,
-          boundaryMargin: EdgeInsets.all(20),
+          boundaryMargin: EdgeInsets.all(0),
           child: Obx(()=> SingleChildScrollView(
             child: SelectionArea(
               child: HtmlWidget(

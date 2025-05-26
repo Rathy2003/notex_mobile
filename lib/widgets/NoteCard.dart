@@ -49,7 +49,7 @@ class NoteCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(_controller.notes_list[index]['title'],
+                      Text(_controller.notes_list[index].title,
                         style: TextStyle(
                             fontSize: 18,
                             overflow: TextOverflow.fade,
@@ -58,7 +58,7 @@ class NoteCard extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          Text(_controller.notes_list[index]['created_at'],
+                          Text(_controller.notes_list[index].created_at.toString(),
                             style: TextStyle(
                               color: AppColors.textColorSecondary
                             ),
@@ -68,7 +68,7 @@ class NoteCard extends StatelessWidget {
                                 color: AppColors.textColorSecondary
                             ),
                           ),
-                          Text(_controller.notes_list[index]['tags'],
+                          Text(_controller.notes_list[index].tags,
                             style: TextStyle(
                                 color: AppColors.textColorSecondary
                             ),

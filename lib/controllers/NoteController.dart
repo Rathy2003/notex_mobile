@@ -1,24 +1,32 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:notex_mobile/models/NoteModel.dart';
 import 'package:notex_mobile/utils/environment.dart';
 
 class NoteController extends GetxController{
 
-  var notes_list = [].obs;
   var search_list = [].obs;
-  var temp_notes_list = [];
+  RxList<NoteModel> temp_notes_list = <NoteModel>[].obs;
+  RxList<NoteModel> notes_list = <NoteModel>[].obs;
   var isLoading = false.obs;
+
   // view note
   var selected_note = Map<String, dynamic>().obs;
   final box = GetStorage();
 
   @override
-  onInit(){
+  onInit() async{
     super.onInit();
-    getNotes();
+    var connectivity = await Connectivity().checkConnectivity();
+    if(connectivity.contains(ConnectivityResult.none)){
+      loadNotesFromLocal();
+    }else{
+        getNotes();
+    }
   }
 
   getSelectedTags(){
@@ -32,9 +40,10 @@ class NoteController extends GetxController{
   getNotes() async{
       isLoading.value = true;
       var rp = await http.get(Uri.parse("${Environment.API_BASE_URL}/notes?userid=N9Wgm26kMk5yKTNfWyA0"));
-      var result = await rp.body;
-      temp_notes_list = json.decode(result);
+      List<dynamic> result = json.decode(rp.body);
+      temp_notes_list.value = result.map((e)=>NoteModel.fromJson(e)).toList();
       notes_list.value = getFilterNotesByTags();
+      saveNoteToLocal();
       isLoading.value = false;
   }
 
@@ -66,31 +75,45 @@ class NoteController extends GetxController{
     search_list.clear();
   }
 
-  onClickViewNote(Map<String, dynamic> item){
-    selected_note.value = Map<String,dynamic>.from(item).obs;
+  onClickViewNote(NoteModel item){
+    selected_note.value = Map<String,dynamic>.from(item.toJson()).obs;
   }
 
   getFilterNotesByTags(){
-    var filterNotes = [];
+    List<NoteModel> filterNotes = <NoteModel>[];
     var selectedTagsList = getSelectedTags();
     if(selectedTagsList == null){
       return temp_notes_list;
     }
     for (var item in temp_notes_list) {
-      if(selectedTagsList.contains(item['tags'])){
+      if(selectedTagsList.contains(item.tags)){
         filterNotes.add(item);
       }
     }
-    return filterNotes;
+    return filterNotes.toList();
   }
 
   onSearchNotes(String query){
     var result = [];
     temp_notes_list.forEach((item) {
-        if(item['title'].toLowerCase().indexOf(query.toLowerCase()) > -1){
+        if(item.title.toLowerCase().contains(query.toLowerCase())){
           result.add(item);
         }
     });
     search_list.value = result;
+  }
+
+  saveNoteToLocal(){
+    if(notes_list.isNotEmpty){
+      box.write("notes", temp_notes_list.map((e)=> e.toJson()).toList());
+    }
+  }
+
+  loadNotesFromLocal(){
+    var savedNotes = box.read<List>('notes');
+    if(savedNotes != null){
+      temp_notes_list.value = savedNotes.map((e)=>NoteModel.fromJson(e)).toList();
+      notes_list.value = getFilterNotesByTags();
+    }
   }
 }

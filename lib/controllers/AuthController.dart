@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +9,7 @@ import 'package:notex_mobile/utils/environment.dart';
 
 class AuthController extends GetxController{
   RxBool isLogin = false.obs;
-  var user_info = {}.obs;
+  RxMap<String,dynamic> user_info = <String,dynamic>{}.obs;
   var errors = {
     "email": "".obs,
     "password": "".obs
@@ -19,7 +20,13 @@ class AuthController extends GetxController{
   @override
   void onInit() async {
     super.onInit();
-    processCheckAuth();
+    var connectivity = await Connectivity().checkConnectivity();
+    if(connectivity.contains(ConnectivityResult.none)){
+      loadFromLocal();
+    }else{
+      processCheckAuth();
+    }
+
   }
 
   processLogin(String email, String password) async{
@@ -40,6 +47,7 @@ class AuthController extends GetxController{
            box.write("_token", token);
            isLogin.value = true;
            user_info.value = result['data'];
+           saveToLocal();
            Get.offAllNamed(AppRoutes.home);
          }
       });
@@ -62,7 +70,6 @@ class AuthController extends GetxController{
         if(result['status'] == 200){
          user_info.value = result['data'];
          isLogin.value = true;
-
          Get.offAllNamed(AppRoutes.home);
         }else if(result['status'] == 200){ // mean login successful
           var token = result['token'];
@@ -77,6 +84,9 @@ class AuthController extends GetxController{
 
   processLogout(){
     box.remove("_token");
+    box.remove("tags");
+    box.remove("notes");
+    box.remove("user_info");
     isLogin.value = false;
     isReady.value = true;
     Get.offAllNamed(AppRoutes.login);
@@ -92,5 +102,20 @@ class AuthController extends GetxController{
         r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     );
     return emailRegex.hasMatch(email);
+  }
+
+  saveToLocal(){
+    box.write("user_info", json.encode(user_info));
+  }
+
+  loadFromLocal(){
+    if(box.read("user_info") != null){
+      var user = json.decode(box.read("user_info"));
+      isLogin.value = true;
+      user_info.value = user;
+      Get.offAllNamed(AppRoutes.home);
+    }else{
+      isReady.value = true;
+    }
   }
 }
