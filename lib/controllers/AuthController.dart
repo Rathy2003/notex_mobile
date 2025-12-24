@@ -1,15 +1,15 @@
 import 'dart:convert';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:notex_mobile/models/UserModel.dart';
 import 'package:notex_mobile/route/routes.dart';
 import 'package:notex_mobile/utils/environment.dart';
 
 class AuthController extends GetxController{
   RxBool isLogin = false.obs;
-  RxMap<String,dynamic> user_info = <String,dynamic>{}.obs;
+  Rx<User?> userInfo = Rxn<User>();
   var errors = {
     "email": "".obs,
     "password": "".obs
@@ -26,7 +26,6 @@ class AuthController extends GetxController{
     }else{
       processCheckAuth();
     }
-
   }
 
   processLogin(String email, String password) async{
@@ -46,9 +45,9 @@ class AuthController extends GetxController{
            var token = result['token'];
            box.write("_token", token);
            isLogin.value = true;
-           user_info.value = result['data'];
+           userInfo.value = User.fromJson(result['data']);
            saveToLocal();
-           Get.offAllNamed(AppRoutes.home);
+           Get.offAllNamed(AppRoutes.index);
          }
       });
     }else{
@@ -68,9 +67,9 @@ class AuthController extends GetxController{
       ).then((rp){
         var result = json.decode(rp.body);
         if(result['status'] == 200){
-         user_info.value = result['data'];
+         userInfo.value = User.fromJson(result['data']);
          isLogin.value = true;
-         Get.offAllNamed(AppRoutes.home);
+         Get.offAllNamed(AppRoutes.index);
         }else if(result['status'] == 200){ // mean login successful
           var token = result['token'];
           box.write("_token", token);
@@ -105,15 +104,16 @@ class AuthController extends GetxController{
   }
 
   saveToLocal(){
-    box.write("user_info", json.encode(user_info));
+    final user = userInfo.value;
+    box.write("user_info", json.encode(user!.toJson()));
   }
 
   loadFromLocal(){
     if(box.read("user_info") != null){
       var user = json.decode(box.read("user_info"));
       isLogin.value = true;
-      user_info.value = user;
-      Get.offAllNamed(AppRoutes.home);
+      userInfo.value = User.fromJson(user);
+      Get.offAllNamed(AppRoutes.index);
     }else{
       isReady.value = true;
     }

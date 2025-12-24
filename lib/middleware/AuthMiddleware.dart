@@ -5,7 +5,6 @@ import 'package:notex_mobile/route/routes.dart';
 
 class AuthMiddleware extends GetMiddleware {
   @override
-  int? get priority => 1;
   RouteSettings? redirect(String? route) {
     final AuthController controller = Get.find();
     if(!controller.isLogin.value){

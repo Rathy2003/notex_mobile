@@ -125,6 +125,14 @@ class LoginPage extends StatelessWidget {
                 ),
                 child: ElevatedButton(
                     onPressed: ()=> authController.processLogin(_email.text, _password.text),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 13),
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+          
+                    ),
                     child: Text(
                         "Sign in",
                         style: TextStyle(
@@ -133,28 +141,10 @@ class LoginPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.white
                         )
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 13),
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)
-                      ),
-          
                     )
                 ),
               ),
               SizedBox(height: 15,),
-              TextButton(onPressed: () => print("Click"),
-                  child: Text("Create new account",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: font,
-                        fontWeight: FontWeight.bold
-                    ),
-                  )
-              )
             ],
           ),
         ) : SizedBox.shrink()),

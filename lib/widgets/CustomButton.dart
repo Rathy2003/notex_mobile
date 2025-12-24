@@ -21,6 +21,14 @@ class CustomButton extends StatelessWidget {
       ),
       child: ElevatedButton(
           onPressed: () => onPressed!(),
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.symmetric(vertical: 13),
+            backgroundColor: bgColor ?? Colors.blue,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5)
+            ),
+
+          ),
           child: icon != null ? Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -28,11 +36,11 @@ class CustomButton extends StatelessWidget {
                 icon!.icon,
                 color: fgColor ?? Colors.white,
               ),
-              SizedBox(width: 18,),
+              SizedBox(width: 17,),
               Text(
                   label,
                   style: TextStyle(
-                      fontSize: 19,
+                      fontSize: 17,
                       fontFamily: GoogleFonts.poppins().fontFamily,
                       fontWeight: FontWeight.bold,
                       color:  fgColor ?? Colors.white
@@ -42,19 +50,11 @@ class CustomButton extends StatelessWidget {
           ): Text(
               label,
               style: TextStyle(
-                  fontSize: 19,
+                  fontSize: 18,
                   fontFamily: GoogleFonts.poppins().fontFamily,
                   fontWeight: FontWeight.bold,
                   color:  fgColor ?? Colors.white
               )
-          ),
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 13),
-            backgroundColor: bgColor ?? Colors.blue,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5)
-            ),
-
           ),
       ),
     );

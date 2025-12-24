@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notex_mobile/controllers/NoteController.dart';
 import 'package:get/get.dart';
-import 'package:notex_mobile/route/routes.dart';
 import 'package:notex_mobile/utils/color.dart';
 
 class ViewNotePage extends StatelessWidget {
@@ -11,50 +9,48 @@ class ViewNotePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     NoteController noteController = Get.find();
-
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: Text(
-            noteController.selected_note['title'],
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontSize: 18,
-            ),
-        ),
-        leading: Center(
-          child: IconButton(
-              onPressed: ()=>Get.back(),
-              icon: FaIcon(
-                FontAwesomeIcons.chevronLeft,
-                color: Colors.white,
-              )
-          ),
-        ),
-        actions: [
-          IconButton(
-              onPressed: ()=> Get.toNamed(AppRoutes.editor),
-              icon: FaIcon(
-                FontAwesomeIcons.pen,
-                size: 20,
-                color: AppColors.textColor,
-              )
-          ),
-          SizedBox(width: 10,),
-          FaIcon(
-            FontAwesomeIcons.shareNodes,
-            color: AppColors.textColor,
-          ),
-          SizedBox(width: 25,)
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   automaticallyImplyLeading: false,
+      //   title: Text(
+      //       noteController.selected_note['title'],
+      //       style: TextStyle(
+      //         fontWeight: FontWeight.bold,
+      //         color: Colors.white,
+      //         fontSize: 18,
+      //       ),
+      //   ),
+      //   leading: Center(
+      //     child: IconButton(
+      //         onPressed: ()=>Get.back(),
+      //         icon: FaIcon(
+      //           FontAwesomeIcons.chevronLeft,
+      //           color: Colors.white,
+      //         )
+      //     ),
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //         onPressed: ()=> Get.toNamed(AppRoutes.editor),
+      //         icon: FaIcon(
+      //           FontAwesomeIcons.pen,
+      //           size: 20,
+      //           color: AppColors.textColor,
+      //         )
+      //     ),
+      //     SizedBox(width: 10,),
+      //     FaIcon(
+      //       FontAwesomeIcons.shareNodes,
+      //       color: AppColors.textColor,
+      //     ),
+      //     SizedBox(width: 25,)
 
-        ],
-        backgroundColor: AppColors.secondaryColor,
-      ),
+      //   ],
+      //   backgroundColor: AppColors.secondaryColor,
+      // ),
       body: Container(
         height: double.infinity,
         padding: const EdgeInsets.all(15.0),

@@ -1,28 +1,24 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import '../controllers/AuthController.dart';
-import '../route/routes.dart';
-import '../utils/color.dart';
-import 'package:get/get.dart';
+import 'package:notex_mobile/controllers/PageViewController.dart';
+import 'package:notex_mobile/utils/color.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    final AuthController _authController = Get.find();
+    final PageViewController pageViewController = Get.find();
 
     return Container(
       padding: EdgeInsets.only(left: 45, right: 45, top: 15, bottom: 30),
-      color: AppColors.secondaryColor,
+      color: Theme.of(context).colorScheme.primary,
       child: Row(
         children: [
           GestureDetector(
-              onTap: ()=> Get.toNamed(AppRoutes.home),
-              child: FaIcon(FontAwesomeIcons.home, color: Get.currentRoute == AppRoutes.home ? Colors.white : Colors.grey)
+              onTap: ()=> pageViewController.goToPage(0),
+              child: Obx(() => FaIcon(FontAwesomeIcons.home, color: pageViewController.currentPage.value == 0 ? AppColors.primaryColor : Colors.grey))
           ),
           Spacer(),
           Container(
@@ -31,28 +27,36 @@ class BottomNavBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(50),
               color: Color(0xff4d4d4d),
             ),
-            child: FaIcon(FontAwesomeIcons.plus, color: Colors.white),
+            child: FaIcon(FontAwesomeIcons.plus),
           ),
           Spacer(),
           GestureDetector(
-            onTap: ()=> Get.toNamed(AppRoutes.profile),
-            child: Container(
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-              ),
-              height: 45,
-              width: 45,
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: CachedNetworkImageProvider(
-                    "${_authController.user_info['avatar']}"
-                )
-              ),
-            ),
+            onTap: ()=> pageViewController.goToPage(3,title: "Profile"),
+            child: Obx(() => FaIcon(FontAwesomeIcons.solidUser, color: pageViewController.currentPage.value == 3 ? AppColors.primaryColor : Colors.grey)),
           ),
         ],
       ),
     );
   }
 }
+
+// // Extension for safe image provider
+// extension SafeImageProvider on String? {
+//   ImageProvider get safeProvider {
+//     var noProfileImage = "assets/images/no_profile.jpg";
+//     if (this == null || this!.isEmpty) {
+//       return AssetImage(noProfileImage);
+//     }
+    
+//     try {
+//       final uri = Uri.tryParse(this!);
+//       if (uri == null || !uri.hasScheme) {
+//         return AssetImage(noProfileImage);
+//       }
+      
+//       return CachedNetworkImageProvider(this!);
+//     } catch (e) {
+//       return AssetImage(noProfileImage);
+//     }
+//   }
+// }

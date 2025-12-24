@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notex_mobile/controllers/TagsController.dart';
 import 'package:notex_mobile/controllers/NoteController.dart';
-import 'package:notex_mobile/route/routes.dart';
-import 'package:notex_mobile/widgets/AppBar.dart';
-import 'package:notex_mobile/widgets/BottomNavBar.dart';
 import 'package:notex_mobile/widgets/TagsCard.dart';
 import 'package:notex_mobile/widgets/NoteCard.dart';
 import 'package:get/get.dart';
 
-import '../utils/color.dart';
 
 class HomePage extends StatelessWidget {
-  // const HomePage({super.key});
+  HomePage({super.key});
   final NoteController noteController = Get.find();
   final TagsController tagsController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
-      appBar: AppBarWidget(),
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       body: Obx(() => noteController.isLoading.value ?
           Center(
             child: SpinKitFadingCircle(
@@ -67,7 +61,6 @@ class HomePage extends StatelessWidget {
             ],
           )
       ),
-      bottomNavigationBar: BottomNavBar(),
     );
   }
 }

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:notex_mobile/controllers/NoteController.dart';
+import 'package:notex_mobile/controllers/PageViewController.dart';
 import 'package:notex_mobile/utils/color.dart';
 
 class NoteCard extends StatelessWidget {
-  const NoteCard({super.key,required this.index});
+  NoteCard({super.key,required this.index});
   final int index;
+  final PageViewController pageViewController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class NoteCard extends StatelessWidget {
     return GestureDetector(
       onTap: (){
         _controller.onClickViewNote(_controller.notes_list[index]);
-        Get.toNamed("/view_note");
+        pageViewController.goToPage(2,title: _controller.notes_list[index].title);
       },
       child: Dismissible(
           key: _key,
@@ -53,7 +55,6 @@ class NoteCard extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 18,
                             overflow: TextOverflow.fade,
-                            color: AppColors.textColor
                         ),
                       ),
                       Row(
@@ -82,7 +83,6 @@ class NoteCard extends StatelessWidget {
                   flex: 2,
                     child: Icon(
                         Icons.arrow_forward_ios_outlined,
-                        color: AppColors.textColor,
                     )
                 )
               ],

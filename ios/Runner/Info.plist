@@ -44,6 +44,15 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+
+	<!-- File Picker -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow access to photo library</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Allow access to save photos</string>
+
+	<!-- For iOS 14+ -->
+	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
 	<true/>
 </dict>
 </plist>
