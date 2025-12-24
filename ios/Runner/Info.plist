@@ -43,7 +43,10 @@
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	
+	<!-- FIXED: Added value for this key -->
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 
 	<!-- File Picker -->
 	<key>NSPhotoLibraryUsageDescription</key>
