@@ -7,114 +7,137 @@ import 'package:notex_mobile/models/UserModel.dart';
 import 'package:notex_mobile/route/routes.dart';
 import 'package:notex_mobile/utils/environment.dart';
 
-class AuthController extends GetxController{
-  RxBool isLogin = false.obs;
-  Rx<User?> userInfo = Rxn<User>();
-  var errors = {
-    "email": "".obs,
-    "password": "".obs
-  }.obs;
-  final box = GetStorage();
-  RxBool isReady = false.obs;
+class AuthController extends GetxController {
+  // Observables
+  var isLogin = false.obs;
+  var email = "".obs;
+  var password = "".obs;
+  var isPasswordHidden = true.obs;
+  var userInfo = Rxn<User>();
+  var errors = <String, RxString>{"email": "".obs, "password": "".obs}.obs;
+
+  var isReady = false.obs;
+
+  // Storage
+  final GetStorage _box = GetStorage();
 
   @override
   void onInit() async {
     super.onInit();
-    var connectivity = await Connectivity().checkConnectivity();
-    if(connectivity.contains(ConnectivityResult.none)){
-      loadFromLocal();
-    }else{
-      processCheckAuth();
+    final connectivity = await Connectivity().checkConnectivity();
+    if (connectivity == ConnectivityResult.none) {
+      _loadFromLocal();
+    } else {
+      await _checkAuth();
     }
   }
 
-  processLogin(String email, String password) async{
-    if(isValidEmail(email)){
-      var body = json.encode({"email":email,"password":password});
-      http.post(Uri.parse("${Environment.API_BASE_URL}/user/login"),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: body
-      ).then((rp){
-         var result = json.decode(rp.body);
-         if(result['status'] == 404){
-           errors['email'] = "${result['message']}".obs;
-           errors['password'] = "${result['message']}".obs;
-         }else if(result['status'] == 200){ // mean login successful
-           var token = result['token'];
-           box.write("_token", token);
-           isLogin.value = true;
-           userInfo.value = User.fromJson(result['data']);
-           saveToLocal();
-           Get.offAllNamed(AppRoutes.index);
-         }
-      });
-    }else{
-      errors['email'] = "Please Provide Valid Email".obs;
+  /// LOGIN PROCESS
+  Future<void> processLogin(String emailInput, String passwordInput) async {
+    clearErrorsMessage();
+
+    if (!isValidEmail(emailInput)) {
+      errors['email']?.value = "Please provide a valid email";
+      return;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse("${Environment.API_BASE_URL}/user/login"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({"email": emailInput, "password": passwordInput}),
+      );
+
+      final result = json.decode(response.body);
+
+      if (result['status'] == 200) {
+        final token = result['token'];
+        _box.write("_token", token);
+        userInfo.value = User.fromJson(result['data']);
+        isLogin.value = true;
+        await _saveToLocal();
+        Get.offAllNamed(AppRoutes.index);
+      } else {
+        final message = result['message'] ?? "Login failed";
+        errors['email']?.value = message;
+        errors['password']?.value = message;
+      }
+    } catch (e) {
+      errors['email']?.value = "Network error, please try again.";
     }
   }
 
-  processCheckAuth(){
-    if(box.read("_token") != null){
-      var token = box.read("_token");
-      var body = json.encode({"token":token});
-      http.post(Uri.parse("${Environment.API_BASE_URL}/user/auth"),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: body
-      ).then((rp){
-        var result = json.decode(rp.body);
-        if(result['status'] == 200){
-         userInfo.value = User.fromJson(result['data']);
-         isLogin.value = true;
-         Get.offAllNamed(AppRoutes.index);
-        }else if(result['status'] == 200){ // mean login successful
-          var token = result['token'];
-          box.write("_token", token);
-        }
+  /// CHECK EXISTING AUTH
+  Future<void> _checkAuth() async {
+    final token = _box.read("_token");
+    if (token == null) {
+      isReady.value = true;
+      return;
+    }
 
-      });
-    }else{
+    try {
+      final response = await http.post(
+        Uri.parse("${Environment.API_BASE_URL}/user/auth"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({"token": token}),
+      );
+
+      final result = json.decode(response.body);
+
+      if (result['status'] == 200) {
+        userInfo.value = User.fromJson(result['data']);
+        isLogin.value = true;
+        Get.offAllNamed(AppRoutes.index);
+      } else {
+        isReady.value = true; // token invalid or expired
+      }
+    } catch (e) {
       isReady.value = true;
     }
   }
 
-  processLogout(){
-    box.remove("_token");
-    box.remove("tags");
-    box.remove("notes");
-    box.remove("user_info");
+  /// LOGOUT
+  void processLogout() {
+    _box.remove("_token");
+    _box.remove("tags");
+    _box.remove("notes");
+    _box.remove("user_info");
     isLogin.value = false;
     isReady.value = true;
+    userInfo.value = null;
     Get.offAllNamed(AppRoutes.login);
   }
 
-  clearErrorsMessage(){
-    errors['email'] = "".obs;
-    errors['password'] = "".obs;
+  /// CLEAR ERRORS
+  void clearErrorsMessage() {
+    errors['email']?.value = "";
+    errors['password']?.value = "";
   }
 
+  /// EMAIL VALIDATION
   bool isValidEmail(String email) {
-    final RegExp emailRegex = RegExp(
-        r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    final emailRegex = RegExp(
+      r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
     );
     return emailRegex.hasMatch(email);
   }
 
-  saveToLocal(){
+  /// LOCAL STORAGE
+  Future<void> _saveToLocal() async {
     final user = userInfo.value;
-    box.write("user_info", json.encode(user!.toJson()));
+    if (user != null) {
+      await _box.write("user_info", json.encode(user.toJson()));
+    }
   }
 
-  loadFromLocal(){
-    if(box.read("user_info") != null){
-      var user = json.decode(box.read("user_info"));
+  void _loadFromLocal() {
+    final data = _box.read("user_info");
+    if (data != null) {
+      final user = User.fromJson(json.decode(data));
+      userInfo.value = user;
       isLogin.value = true;
-      userInfo.value = User.fromJson(user);
       Get.offAllNamed(AppRoutes.index);
-    }else{
+    } else {
       isReady.value = true;
     }
   }

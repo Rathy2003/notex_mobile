@@ -19,7 +19,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
   final NoteController _noteController = Get.find();
 
   @override
-  void dispose(){
+  void dispose() {
     _controller.dispose();
     super.dispose();
   }
@@ -28,12 +28,14 @@ class _TextEditorPageState extends State<TextEditorPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    var delta = HtmlToDelta().convert(_noteController.selected_note['content'], transformTableAsEmbed: false);
+    var delta = HtmlToDelta().convert(
+      _noteController.selected_note['content'],
+      transformTableAsEmbed: false,
+    );
     _controller.document = quill.Document.fromDelta(delta);
   }
 
   Widget build(BuildContext context) {
-
     double halfHeight = MediaQuery.of(context).size.height * 0.5;
 
     return Scaffold(
@@ -41,60 +43,60 @@ class _TextEditorPageState extends State<TextEditorPage> {
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: Text(
-              _noteController.selected_note['title'],
-            style: TextStyle(
-              color: AppColors.textColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 20
-            ),
+        centerTitle: true,
+        title: Text(
+          _noteController.selected_note['title'],
+          style: TextStyle(
+            color: AppColors.textColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
-          leading: Center(
-            child: IconButton(
-                onPressed: ()=>Get.back(),
-                icon: FaIcon(
-                  FontAwesomeIcons.chevronLeft,
-                  color: Colors.white,
-                )
-            ),
+        ),
+        leading: Center(
+          child: IconButton(
+            onPressed: () => Get.back(),
+            icon: FaIcon(FontAwesomeIcons.chevronLeft, color: Colors.white),
           ),
-          backgroundColor: AppColors.primaryColor
+        ),
+        backgroundColor: AppColors.primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
         child: ListView(
           children: [
-           quill.QuillSimpleToolbar(
-             controller: _controller,
-             config: const quill.QuillSimpleToolbarConfig(
-               showSearchButton: false,
-               showListCheck: false,
-               showFontFamily: false,
-             ),
-
-           ),
+            quill.QuillSimpleToolbar(
+              controller: _controller,
+              config: const quill.QuillSimpleToolbarConfig(
+                showSearchButton: false,
+                showListCheck: false,
+                showFontFamily: false,
+              ),
+            ),
             quill.QuillEditor.basic(
               controller: _controller,
               config: const quill.QuillEditorConfig(
-                  customStyles: quill.DefaultStyles(
-                  )
+                customStyles: quill.DefaultStyles(),
               ),
             ),
-            SizedBox(height: 45,),
+            SizedBox(height: 45),
             Container(
-              padding: EdgeInsets.only(left: 25,right: 25,top: 10,bottom:50),
+              padding: EdgeInsets.only(
+                left: 25,
+                right: 25,
+                top: 10,
+                bottom: 50,
+              ),
               child: CustomButton(
-                  onPressed: (){
-                    final delOpt = _controller.document.toDelta().toJson();
-                    final converter = QuillDeltaToHtmlConverter(
-                      delOpt,
-                      ConverterOptions.forEmail(),
-                    );
-                    final html = converter.convert();
-                    _noteController.saveChangeContent(html);
-                  },
-                  label: "Save"
+                onPressed: () {
+                  final delOpt = _controller.document.toDelta().toJson();
+                  final converter = QuillDeltaToHtmlConverter(
+                    delOpt,
+                    ConverterOptions.forEmail(),
+                  );
+                  final html = converter.convert();
+                  _noteController.saveChangeContent(html);
+                },
+                label: "Save",
               ),
             ),
           ],

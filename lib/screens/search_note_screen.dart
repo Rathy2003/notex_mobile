@@ -5,8 +5,8 @@ import 'package:notex_mobile/controllers/PageViewController.dart';
 import 'package:notex_mobile/utils/color.dart';
 import 'package:get/get.dart';
 
-class SearchNotePage extends StatelessWidget {
-  SearchNotePage({super.key});
+class SearchNoteScreen extends StatelessWidget {
+  SearchNoteScreen({super.key});
   final NoteController noteController = Get.find();
   final searchController = SearchController();
 
@@ -29,11 +29,7 @@ class SearchNotePage extends StatelessWidget {
                   Flexible(
                     flex: 1,
                     child: GestureDetector(
-                      onTap:
-                          () => {
-                            noteController.onClearSearchResult(),
-                            pageViewController.goBack(),
-                          },
+                      onTap: () => Get.back(),
                       child: FaIcon(
                         FontAwesomeIcons.chevronLeft,
                         color: Colors.white,
@@ -69,7 +65,7 @@ class SearchNotePage extends StatelessWidget {
                           ) {
                             return Color(0xff4d4d4d);
                           }),
-                      hintText: "Find your note here...",
+                      hintText: "search_note_caption".tr,
                       hintStyle: MaterialStateProperty.resolveWith<TextStyle?>((
                         Set<MaterialState> states,
                       ) {

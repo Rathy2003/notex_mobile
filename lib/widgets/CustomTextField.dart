@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../utils/color.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({super.key,this.textController,this.hintText});
+  const CustomTextField({super.key, this.textController, this.hintText});
   final TextEditingController? textController;
   final String? hintText;
   @override
@@ -12,25 +12,22 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: textController,
       style: TextStyle(
-          color: AppColors.textColor,
-          fontFamily: GoogleFonts.poppins().fontFamily,
-          fontSize: 18
+        color: AppColors.textColor,
+        fontFamily: "Poppins",
+        fontSize: 18,
       ),
       decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.blue
-              )
-          ),
-          errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.red
-              )
-          ),
-          hintText: hintText,
-          filled: true,
-          fillColor: AppColors.secondaryColor
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        hintText: hintText,
+        filled: true,
+        fillColor: AppColors.secondaryColor,
       ),
     );
   }
