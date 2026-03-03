@@ -29,7 +29,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
     // TODO: implement initState
     super.initState();
     var delta = HtmlToDelta().convert(
-      _noteController.selected_note['content'],
+      _noteController.selectedNotes['content'],
       transformTableAsEmbed: false,
     );
     _controller.document = quill.Document.fromDelta(delta);
@@ -45,7 +45,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
-          _noteController.selected_note['title'],
+          _noteController.selectedNotes['title'],
           style: TextStyle(
             color: AppColors.textColor,
             fontWeight: FontWeight.bold,

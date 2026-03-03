@@ -83,17 +83,17 @@ class SearchNoteScreen extends StatelessWidget {
                 flex: 25,
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: noteController.search_list.length,
+                  itemCount: noteController.searchNotesList.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       onTap: () {
                         noteController.onClickViewNote(
-                          noteController.search_list[index],
+                          noteController.searchNotesList[index],
                         );
                         Get.toNamed('/view_note');
                       },
                       title: Text(
-                        noteController.search_list[index]['title'],
+                        noteController.searchNotesList[index]['title'],
                         style: TextStyle(color: AppColors.textColor),
                       ),
                       trailing: FaIcon(

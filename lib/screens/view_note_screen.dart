@@ -4,14 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notex_mobile/controllers/NoteController.dart';
 import 'package:get/get.dart';
 import 'package:notex_mobile/route/routes.dart';
-import 'package:notex_mobile/utils/color.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:notex_mobile/controllers/NoteController.dart';
-import 'package:get/get.dart';
-import 'package:notex_mobile/route/routes.dart';
-import 'package:notex_mobile/utils/color.dart';
 
 class ViewNoteScreen extends StatelessWidget {
   const ViewNoteScreen({super.key});
@@ -25,7 +17,7 @@ class ViewNoteScreen extends StatelessWidget {
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: Text(
-          noteController.selected_note['title'] ?? '',
+          noteController.selectedNotes['title'] ?? '',
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         leading: IconButton(
@@ -52,7 +44,7 @@ class ViewNoteScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(16.0), // <-- padding applied here
                 child: HtmlWidget(
-                  noteController.selected_note['content'] ?? '',
+                  noteController.selectedNotes['content'] ?? '',
                   textStyle: const TextStyle(fontSize: 16),
                   customStylesBuilder: (element) {
                     // Style code blocks

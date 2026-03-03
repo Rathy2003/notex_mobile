@@ -9,6 +9,8 @@ import 'package:notex_mobile/controllers/TagsController.dart';
 import 'package:notex_mobile/controllers/NoteController.dart';
 import 'package:notex_mobile/controllers/ThemeController.dart';
 import 'package:notex_mobile/route/routes.dart';
+import 'package:notex_mobile/services/api_service.dart';
+import 'package:notex_mobile/services/local_storage_service.dart';
 import 'package:notex_mobile/translations/app_translations.dart';
 import 'package:notex_mobile/utils/theme.dart';
 
@@ -16,6 +18,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
 
+  Get.put(ApiService());
+  Get.put(LocalStorageService());
   Get.put(Appcontroller());
   Get.put(Themecontroller());
   Get.put(PageViewController());
@@ -39,9 +43,9 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: const [FlutterQuillLocalizations.delegate],
         theme: lightModeTheme,
         darkTheme: darkModeTheme,
-        themeMode: themeController.themeMode, // 👈 dynamic now
+        themeMode: themeController.themeMode,
         debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.login,
+        initialRoute: AppRoutes.auth,
         getPages: AppRoutes.routes,
       ),
     );

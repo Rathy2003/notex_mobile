@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:notex_mobile/middleware/AuthMiddleware.dart';
+import 'package:notex_mobile/screens/auth/authgate_screen.dart';
 import 'package:notex_mobile/screens/home_screen.dart';
 import 'package:notex_mobile/screens/login_screen.dart';
 import 'package:notex_mobile/screens/setting_screen.dart';
@@ -9,6 +10,7 @@ import 'package:notex_mobile/screens/text_editor_page.dart';
 import 'package:notex_mobile/screens/view_note_screen.dart';
 
 class AppRoutes {
+  static const auth = "/auth";
   static const home = "/home";
   static const index = "/";
   static const editor = "/editor";
@@ -19,6 +21,7 @@ class AppRoutes {
   static const profile_details = "/profile_details";
 
   static final routes = [
+    GetPage(name: auth, page: () => AuthGate()),
     GetPage(name: login, page: () => LoginScreen()),
     GetPage(name: editor, page: () => TextEditorPage()),
     GetPage(

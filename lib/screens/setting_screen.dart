@@ -4,9 +4,7 @@ import 'package:notex_mobile/controllers/AppController.dart';
 import 'package:notex_mobile/controllers/AuthController.dart';
 import 'package:notex_mobile/controllers/ThemeController.dart';
 import 'package:notex_mobile/route/routes.dart';
-import 'package:notex_mobile/utils/color.dart';
 import 'package:get/get.dart';
-import 'package:notex_mobile/widgets/CustomButton.dart';
 
 // ignore: prefer_typing_uninitialized_variables
 var buildContext;
@@ -58,6 +56,21 @@ class SettingScreen extends StatelessWidget {
                           onChanged: (value) {
                             themeController.toggleTheme();
                           },
+                          activeColor:
+                              Colors.white, // thumb when ON (dark mode)
+                          activeTrackColor: Colors.blueAccent.withOpacity(
+                            0.7,
+                          ), // track when ON
+                          inactiveThumbColor:
+                              Get.isDarkMode
+                                  ? Colors.grey.shade300
+                                  : Colors.grey.shade800, // thumb when OFF
+                          inactiveTrackColor:
+                              Get.isDarkMode
+                                  ? Colors.grey.shade600.withOpacity(0.3)
+                                  : Colors.grey.shade400.withOpacity(
+                                    0.5,
+                                  ), // track when OFF
                         ),
                       ),
                     ],

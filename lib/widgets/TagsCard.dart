@@ -11,30 +11,32 @@ class TagsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TagsController tagsController = Get.find();
+    double radius = 10;
+    double textFontSize = 17;
 
     return Obx(() {
       final String tagName = tagsController.tagsList[index].name;
       final bool isSelected = tagsController.selectedTagsList.contains(tagName);
 
       return Material(
-        borderRadius: BorderRadius.circular(40),
+        borderRadius: BorderRadius.circular(radius),
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(radius),
           onTap: () {
             tagsController.onSelectedTagsToggle(tagName);
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 2),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: isSelected ?  Colors.white : AppColors.secondaryColor,
+              borderRadius: BorderRadius.circular(radius),
+              color: isSelected ? Colors.white : AppColors.secondaryColor,
             ),
             child: Text(
               tagName.toUpperCase(),
               style: TextStyle(
-                fontSize: 16,
+                fontSize: textFontSize,
                 color: isSelected ? Colors.black : AppColors.textColor,
               ),
             ),
