@@ -160,7 +160,8 @@ class ProfileDetailsScreen extends StatelessWidget {
                 },
                 bgColor: Colors.red,
                 label: "Sign Out",
-                icon: FaIcon(FontAwesomeIcons.signOut),
+
+                ///icon: FaIcon(FontAwesomeIcons.signOut),
               ),
             ],
           ),

@@ -18,6 +18,7 @@ class AuthController extends GetxController {
   var errors = <String, RxString>{"email": "".obs, "password": "".obs}.obs;
   var isReady = false.obs;
   var authStatus = AuthStatus.checking.obs;
+  int splashScreenDelay = 2;
 
   // Storage
   final GetStorage _box = GetStorage();
@@ -28,7 +29,7 @@ class AuthController extends GetxController {
   void onInit() async {
     super.onInit();
     final connectivity = await Connectivity().checkConnectivity();
-    if (connectivity == ConnectivityResult.none) {
+    if (connectivity[0] == ConnectivityResult.none) {
       _loadFromLocal();
     } else {
       await _checkAuth();
@@ -52,6 +53,7 @@ class AuthController extends GetxController {
 
         /// auto redirect to home
         /// Get.offAllNamed(AppRoutes.index);
+        await Future.delayed(Duration(seconds: splashScreenDelay));
         authStatus.value = AuthStatus.authenticated;
       } else {
         final message = result['message'] ?? "Login failed";
@@ -90,6 +92,8 @@ class AuthController extends GetxController {
           var user = User.fromJson(result['data']);
           userInfo.value = User.fromJson(result['data']);
           isLogin.value = true;
+
+          await Future.delayed(Duration(seconds: splashScreenDelay));
           authStatus.value = AuthStatus.authenticated;
         } else {
           authStatus.value = AuthStatus.unauthenticated;

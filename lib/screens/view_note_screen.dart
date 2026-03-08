@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notex_mobile/controllers/NoteController.dart';
 import 'package:get/get.dart';
 import 'package:notex_mobile/route/routes.dart';
+import 'package:notex_mobile/widgets/OptionItemCard.dart';
 
 class ViewNoteScreen extends StatelessWidget {
   const ViewNoteScreen({super.key});
@@ -16,6 +17,7 @@ class ViewNoteScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
+        elevation: 1,
         title: Text(
           noteController.selectedNotes['title'] ?? '',
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -26,12 +28,13 @@ class ViewNoteScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => Get.toNamed(AppRoutes.editor),
-            icon: const FaIcon(FontAwesomeIcons.pen, size: 18),
+            // onPressed: () => Get.toNamed(AppRoutes.editor),
+            onPressed: () => showMoreOption(context),
+            icon: const FaIcon(FontAwesomeIcons.ellipsisVertical, size: 18),
           ),
-          const SizedBox(width: 10),
-          const FaIcon(FontAwesomeIcons.shareNodes),
-          const SizedBox(width: 25),
+          // const SizedBox(width: 10),
+          // const FaIcon(FontAwesomeIcons.shareNodes),
+          // const SizedBox(width: 25),
         ],
       ),
       body: Obx(
@@ -72,4 +75,33 @@ class ViewNoteScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void showMoreOption(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder:
+        (context) => Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: IntrinsicHeight(
+            child: Row(
+              children: [
+                OptionItemCard(
+                  title: "edit".tr,
+                  icon: FontAwesomeIcons.penToSquare,
+                  onTap: () => Get.toNamed(AppRoutes.editor),
+                ),
+                SizedBox(width: 15),
+                OptionItemCard(
+                  title: "share".tr,
+                  icon: FontAwesomeIcons.shareNodes,
+                ),
+              ],
+            ),
+          ),
+        ),
+  );
 }

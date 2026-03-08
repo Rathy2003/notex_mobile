@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notex_mobile/controllers/TagsController.dart';
-import 'package:notex_mobile/utils/color.dart';
 
 class TagsCard extends StatelessWidget {
   const TagsCard({super.key, required this.index});
@@ -10,6 +9,9 @@ class TagsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     TagsController tagsController = Get.find();
     double radius = 10;
     double textFontSize = 17;
@@ -30,19 +32,31 @@ class TagsCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 25, vertical: 2),
             alignment: Alignment.center,
             decoration: BoxDecoration(
+              /// border: Border.all(color: Colors.black, width: 2),
               borderRadius: BorderRadius.circular(radius),
-              color: isSelected ? Colors.white : AppColors.secondaryColor,
+              color: _getBackgroundColor(isSelected, isDark),
             ),
             child: Text(
               tagName.toUpperCase(),
               style: TextStyle(
                 fontSize: textFontSize,
-                color: isSelected ? Colors.black : AppColors.textColor,
+                color: _getForegroundColor(isSelected, isDark),
               ),
             ),
           ),
         ),
       );
     });
+  }
+
+  Color _getBackgroundColor(bool isSelected, bool isDark) {
+    Color backgroundColor = isDark ? Colors.white : Colors.black;
+    return backgroundColor.withValues(alpha: isSelected ? 1 : 0.5);
+  }
+
+  Color _getForegroundColor(bool isSelected, bool isDark) {
+    Color foregroundColor =
+        isDark ? (isSelected ? Colors.black : Colors.white) : Colors.white;
+    return foregroundColor;
   }
 }

@@ -26,9 +26,9 @@ class NoteController extends GetxController {
   onInit() async {
     super.onInit();
     var connectivity = await Connectivity().checkConnectivity();
-    if (connectivity.contains(ConnectivityResult.none)) {
-      tempNotesList.value = _localStorageService.loadNotesFromLocal();
-      notesList.value = _localStorageService.getSelectedTags();
+    if (connectivity[0] == ConnectivityResult.none) {
+      tempNotesList.value = _localStorageService.loadNotesFromLocal() ?? [];
+      notesList.value = getNotesByTags();
     } else {
       getAllNotes();
     }
@@ -63,6 +63,10 @@ class NoteController extends GetxController {
         });
   }
 
+  refreshNotesList() {
+    notesList.value = getNotesByTags();
+  }
+
   getNotesByTags() {
     List<NoteModel> filterNotes = <NoteModel>[];
     var selectedTagsList = _localStorageService.getSelectedTags();
@@ -76,7 +80,7 @@ class NoteController extends GetxController {
     }
     return filterNotes.toList();
   }
-  
+
   /// Event Handler
   onSearchNotes(String query) {
     var result = [];
@@ -96,7 +100,7 @@ class NoteController extends GetxController {
     selectedNotes.value = Map<String, dynamic>.from(item.toJson()).obs;
   }
 
-   onUpdateFilterNotes() {
+  onUpdateFilterNotes() {
     notesList.value = getNotesByTags();
   }
 }

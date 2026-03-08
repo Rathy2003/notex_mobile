@@ -20,7 +20,7 @@ class NoteCard extends StatelessWidget {
       onTap: () {
         _noteController.selectedNotes.value =
             Map<String, dynamic>.from(
-              _noteController.notesList[index].toJson(),
+              _noteController.notesList[index]!.toJson(),
             ).obs;
         Get.toNamed(AppRoutes.view_note);
       },
@@ -50,7 +50,7 @@ class NoteCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _noteController.notesList[index].title,
+                      _noteController.notesList[index]!.title,
                       style: TextStyle(
                         fontSize: 18,
                         overflow: TextOverflow.fade,
@@ -59,7 +59,7 @@ class NoteCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          _noteController.notesList[index].created_at
+                          _noteController.notesList[index]!.created_at
                               .toString(),
                           style: TextStyle(color: AppColors.textColorSecondary),
                         ),
@@ -68,7 +68,7 @@ class NoteCard extends StatelessWidget {
                           style: TextStyle(color: AppColors.textColorSecondary),
                         ),
                         Text(
-                          _noteController.notesList[index].tags,
+                          _noteController.notesList[index]!.tags,
                           style: TextStyle(color: AppColors.textColorSecondary),
                         ),
                       ],

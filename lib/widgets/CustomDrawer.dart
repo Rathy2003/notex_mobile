@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:notex_mobile/controllers/AuthController.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:notex_mobile/screens/setting_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   // const CustomDrawer({
@@ -13,6 +12,7 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentRoute = Get.currentRoute;
     return Drawer(
       child: Column(
         children: [
@@ -48,25 +48,19 @@ class CustomDrawer extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text('home'.tr),
-                  onTap: () {
-                    Get.toNamed('/index');
-                  },
+                _buildItem(
+                  context,
+                  icon: Icons.home,
+                  label: 'home'.tr,
+                  route: '/index',
+                  currentRoute: currentRoute,
                 ),
-                ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('setting'.tr),
-                  onTap: () {
-                    Get.toNamed('/setting');
-                  },
-                ),
-                Divider(),
-                ListTile(
-                  leading: Icon(Icons.logout, color: Colors.red),
-                  title: Text('logout'.tr, style: TextStyle(color: Colors.red)),
-                  onTap: () => authController.processLogout(),
+                _buildItem(
+                  context,
+                  icon: Icons.settings,
+                  label: 'setting'.tr,
+                  route: '/setting',
+                  currentRoute: currentRoute,
                 ),
               ],
             ),
@@ -74,7 +68,7 @@ class CustomDrawer extends StatelessWidget {
 
           // Footer
           Container(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(15),
             child: Text(
               'Version 1.0.0',
               style: TextStyle(color: Colors.grey, fontSize: 12),
@@ -105,4 +99,41 @@ extension SafeImageProvider on String? {
       return AssetImage(noProfileImage);
     }
   }
+}
+
+Widget _buildItem(
+  BuildContext context, {
+  required IconData icon,
+  required String label,
+  required String route,
+  required String currentRoute,
+}) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final isActive = currentRoute == route;
+  final color = isActive ? (isDark ? Colors.black : Colors.white) : null;
+
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+    decoration: BoxDecoration(
+      color:
+          isActive
+              ? (isDark ? Colors.white : Colors.black)
+              : Colors.transparent,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: ListTile(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      leading: Icon(icon, color: color),
+      title: Text(
+        label,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: color,
+          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      onTap: () {
+        Get.toNamed(route);
+      },
+    ),
+  );
 }

@@ -11,6 +11,7 @@ import 'package:notex_mobile/controllers/ThemeController.dart';
 import 'package:notex_mobile/route/routes.dart';
 import 'package:notex_mobile/services/api_service.dart';
 import 'package:notex_mobile/services/local_storage_service.dart';
+import 'package:notex_mobile/theme/app_theme.dart';
 import 'package:notex_mobile/translations/app_translations.dart';
 import 'package:notex_mobile/utils/theme.dart';
 
@@ -30,7 +31,12 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final themeController = Get.find<Themecontroller>();
 
   @override
@@ -42,8 +48,8 @@ class MyApp extends StatelessWidget {
         fallbackLocale: const Locale('en', 'US'),
         localizationsDelegates: const [FlutterQuillLocalizations.delegate],
         theme: lightModeTheme,
-        darkTheme: darkModeTheme,
         themeMode: themeController.themeMode,
+        darkTheme: darkModeTheme,
         debugShowCheckedModeBanner: false,
         initialRoute: AppRoutes.auth,
         getPages: AppRoutes.routes,

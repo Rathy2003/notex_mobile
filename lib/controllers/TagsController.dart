@@ -7,65 +7,73 @@ import 'package:notex_mobile/controllers/NoteController.dart';
 import 'package:notex_mobile/models/TagsModel.dart';
 import '../utils/environment.dart';
 
-class TagsController extends GetxController{
-  RxList<TagsModel>  tagsList = <TagsModel>[].obs;
+class TagsController extends GetxController {
+  RxList<TagsModel> tagsList = <TagsModel>[].obs;
   var selectedTagsList = <String>[].obs;
   final box = GetStorage();
   final NoteController noteController = Get.find();
 
   @override
-  onInit() async{
+  onInit() async {
     super.onInit();
 
     var connectivity = await Connectivity().checkConnectivity();
     getSelectedTags();
-    if(connectivity.contains(ConnectivityResult.none)){
+    if (connectivity.contains(ConnectivityResult.none)) {
       loadTagsFromLocal();
-    }else{
+    } else {
       getTags();
     }
   }
 
-  void getSelectedTags(){
-    if(box.read('selectedTags') != null){
+  void getSelectedTags() {
+    if (box.read('selectedTags') != null) {
       List<dynamic> loadedTags = jsonDecode(box.read('selectedTags')).toList();
       selectedTagsList.value = loadedTags.cast<String>().toList();
     }
   }
 
-  void onSelectedTagsToggle(String tags){
-    if(!selectedTagsList.contains(tags)){
+  void onSelectedTagsToggle(String tags) {
+    if (!selectedTagsList.contains(tags)) {
       selectedTagsList.add(tags);
-    }else{
+    } else {
       selectedTagsList.remove(tags);
     }
 
-    if(selectedTagsList.isEmpty){
+    if (selectedTagsList.isEmpty) {
       box.remove('selectedTags');
-    }else{
+    } else {
       box.write('selectedTags', json.encode(selectedTagsList));
     }
     noteController.onUpdateFilterNotes();
   }
 
-  getTags() async{
-    var rp = await http.get(Uri.parse("${Environment.API_BASE_URL}/tags?userid=N9Wgm26kMk5yKTNfWyA0"));
-    List<dynamic> result = json.decode(rp.body)['data'];
-    tagsList.value = result.map((item)=> TagsModel.fromJson(item)).toList();
-    saveTagsToLocal();
-
-  }
-
-  saveTagsToLocal(){
-    if(tagsList.isNotEmpty){
-      box.write("tags", tagsList.map((e)=> e.toJson()).toList());
+  void clearSelectedTags() {
+    if (selectedTagsList.isNotEmpty) {
+      selectedTagsList.clear();
+      box.remove('selectedTags');
     }
   }
 
-  loadTagsFromLocal(){
+  getTags() async {
+    var rp = await http.get(
+      Uri.parse("${Environment.API_BASE_URL}/tags?userid=N9Wgm26kMk5yKTNfWyA0"),
+    );
+    List<dynamic> result = json.decode(rp.body)['data'];
+    tagsList.value = result.map((item) => TagsModel.fromJson(item)).toList();
+    saveTagsToLocal();
+  }
+
+  saveTagsToLocal() {
+    if (tagsList.isNotEmpty) {
+      box.write("tags", tagsList.map((e) => e.toJson()).toList());
+    }
+  }
+
+  loadTagsFromLocal() {
     var savedTags = box.read<List>('tags');
-    if(savedTags != null){
-      tagsList.value = savedTags.map((e)=> TagsModel.fromJson(e)).toList();
+    if (savedTags != null) {
+      tagsList.value = savedTags.map((e) => TagsModel.fromJson(e)).toList();
     }
   }
 }

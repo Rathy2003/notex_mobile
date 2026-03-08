@@ -5,6 +5,7 @@ import 'package:notex_mobile/controllers/TagsController.dart';
 import 'package:notex_mobile/controllers/NoteController.dart';
 import 'package:notex_mobile/widgets/AppBar.dart';
 import 'package:notex_mobile/widgets/CustomDrawer.dart';
+import 'package:notex_mobile/widgets/CustomFloatActionButton.dart';
 import 'package:notex_mobile/widgets/TagsCard.dart';
 import 'package:notex_mobile/widgets/NoteCard.dart';
 import 'package:get/get.dart';
@@ -16,7 +17,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBarWidget(context),
       drawer: CustomDrawer(),
@@ -36,7 +39,7 @@ class HomeScreen extends StatelessWidget {
             Obx(
               () => Container(
                 margin: const EdgeInsets.only(top: 25),
-                height: 50,
+                height: 40,
                 width: double.infinity,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
@@ -74,48 +77,10 @@ class HomeScreen extends StatelessWidget {
           ],
         );
       }),
-      floatingActionButton: SpeedDial(
-        icon: Icons.add,
-        activeIcon: Icons.close,
-        elevation: 0,
-        backgroundColor: isDark ? Colors.deepPurple : Colors.blue,
-        foregroundColor: Colors.white,
-        activeBackgroundColor:
-            isDark ? Colors.deepPurpleAccent : Colors.blueAccent,
-        activeForegroundColor: Colors.white,
-        overlayColor: Colors.black,
-        overlayOpacity: 0.5,
-        spacing: 12,
-        curve: Curves.easeInOut,
-        childrenButtonSize: const Size(55, 55), // size of child FABs
-        children: [
-          SpeedDialChild(
-            backgroundColor:
-                isDark ? Colors.grey.shade800 : Colors.grey.shade200,
-            foregroundColor: isDark ? Colors.white : Colors.black,
-            label: "Add Note",
-            labelStyle: TextStyle(
-              color: isDark ? Colors.white : Colors.black,
-              fontWeight: FontWeight.w600,
-            ),
-            labelBackgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
-            child: const Icon(Icons.note_add),
-            onTap: () => print("Add Note"),
-          ),
-          SpeedDialChild(
-            backgroundColor:
-                isDark ? Colors.grey.shade800 : Colors.grey.shade200,
-            foregroundColor: isDark ? Colors.white : Colors.black,
-            label: "Add Tag",
-            labelStyle: TextStyle(
-              color: isDark ? Colors.white : Colors.black,
-              fontWeight: FontWeight.w600,
-            ),
-            labelBackgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
-            child: const Icon(Icons.tag),
-            onTap: () => print("Add Tag"),
-          ),
-        ],
+      floatingActionButton: CustomFloatActionButton(
+        isDark: isDark,
+        tagsController: tagsController,
+        noteController: noteController,
       ),
     );
   }
